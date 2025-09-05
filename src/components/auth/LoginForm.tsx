@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
-import { Database, Shield, Zap, Code } from "lucide-react";
+import { Database, Shield, Zap, DatabaseZap } from "lucide-react";
 
 interface LoginFormProps {
   onLogin: (email: string) => void;
@@ -84,7 +84,7 @@ export function LoginForm({ onLogin, onToggleMode }: LoginFormProps) {
           <CardHeader className="text-center">
             <CardTitle className="text-2xl font-bold flex items-center justify-center space-x-3">
               <div className="w-8 h-8 bg-gradient-primary rounded-lg flex items-center justify-center">
-                <Code className="w-5 h-5 text-primary-foreground" />
+                <DatabaseZap className="w-5 h-5 text-primary-foreground" />
               </div>
               <span>Test Case Generator - Data Migration</span>
             </CardTitle>
