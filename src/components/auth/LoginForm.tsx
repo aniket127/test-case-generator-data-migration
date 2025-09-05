@@ -3,8 +3,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
-import { Database, Shield, Zap, DatabaseZap } from "lucide-react";
+import { Database, Shield, Zap, DatabaseZap, Eye, EyeOff } from "lucide-react";
 
 interface LoginFormProps {
   onLogin: (email: string) => void;
@@ -15,6 +16,9 @@ export function LoginForm({ onLogin, onToggleMode }: LoginFormProps) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [resetEmail, setResetEmail] = useState("");
+  const [isResetDialogOpen, setIsResetDialogOpen] = useState(false);
   const { toast } = useToast();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -38,6 +42,26 @@ export function LoginForm({ onLogin, onToggleMode }: LoginFormProps) {
       }
       setIsLoading(false);
     }, 1000);
+  };
+
+  const handlePasswordReset = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!resetEmail) {
+      toast({
+        title: "Email Required",
+        description: "Please enter your email address",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Simulate password reset email sending
+    toast({
+      title: "Reset Email Sent",
+      description: "Check your inbox for password reset instructions",
+    });
+    setResetEmail("");
+    setIsResetDialogOpen(false);
   };
 
   return (
@@ -137,15 +161,75 @@ export function LoginForm({ onLogin, onToggleMode }: LoginFormProps) {
                   <Label htmlFor="password" className="text-sm font-medium text-foreground">
                     Password
                   </Label>
-                  <Input
-                    id="password"
-                    type="password"
-                    placeholder="••••••••"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    required
-                    className="h-12 px-4 border-2 border-input focus:border-primary focus:ring-4 focus:ring-primary/20 rounded-lg transition-all duration-200"
-                  />
+                  <div className="relative">
+                    <Input
+                      id="password"
+                      type={showPassword ? "text" : "password"}
+                      placeholder="••••••••"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      required
+                      className="h-12 px-4 pr-12 border-2 border-input focus:border-primary focus:ring-4 focus:ring-primary/20 rounded-lg transition-all duration-200"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors duration-200"
+                    >
+                      {showPassword ? (
+                        <EyeOff className="w-5 h-5" />
+                      ) : (
+                        <Eye className="w-5 h-5" />
+                      )}
+                    </button>
+                  </div>
+                </div>
+
+                <div className="flex justify-end">
+                  <Dialog open={isResetDialogOpen} onOpenChange={setIsResetDialogOpen}>
+                    <DialogTrigger asChild>
+                      <button
+                        type="button"
+                        className="text-sm text-primary hover:text-accent font-medium hover:underline transition-colors duration-200"
+                      >
+                        Forgot Password?
+                      </button>
+                    </DialogTrigger>
+                    <DialogContent className="sm:max-w-md">
+                      <DialogHeader>
+                        <DialogTitle>Reset Password</DialogTitle>
+                        <DialogDescription>
+                          Enter your email address and we'll send you a link to reset your password.
+                        </DialogDescription>
+                      </DialogHeader>
+                      <form onSubmit={handlePasswordReset} className="space-y-4">
+                        <div className="space-y-2">
+                          <Label htmlFor="reset-email">Email Address</Label>
+                          <Input
+                            id="reset-email"
+                            type="email"
+                            placeholder="you@company.com"
+                            value={resetEmail}
+                            onChange={(e) => setResetEmail(e.target.value)}
+                            required
+                            className="h-12 px-4 border-2 border-input focus:border-primary focus:ring-4 focus:ring-primary/20 rounded-lg transition-all duration-200"
+                          />
+                        </div>
+                        <div className="flex justify-end space-x-2">
+                          <Button
+                            type="button"
+                            variant="outline"
+                            onClick={() => setIsResetDialogOpen(false)}
+                          >
+                            Cancel
+                          </Button>
+                          <Button type="submit">
+                            Send Reset Link
+                          </Button>
+                        </div>
+                      </form>
+                    </DialogContent>
+                  </Dialog>
                 </div>
                 
                 <Button 
