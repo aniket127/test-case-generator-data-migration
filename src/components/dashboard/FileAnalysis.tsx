@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { FileText, Database, Target, ArrowRight, Loader2 } from "lucide-react";
 
@@ -247,6 +247,7 @@ export function FileAnalysis({ mappingFile, templateFile, onAnalysisComplete }: 
                 </TableBody>
               </Table>
             </div>
+            <ScrollBar orientation="horizontal" />
           </ScrollArea>
           {analysisData.mappingPreview.length > 1000 && (
             <p className="text-sm text-muted-foreground mt-2">
