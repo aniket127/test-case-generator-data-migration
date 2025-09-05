@@ -82,7 +82,12 @@ export function LoginForm({ onLogin, onToggleMode }: LoginFormProps) {
         {/* Login Form */}
         <Card className="w-full max-w-md mx-auto shadow-elegant animate-scale-in">
           <CardHeader className="text-center">
-            <CardTitle className="text-2xl font-bold">Welcome Back</CardTitle>
+            <div className="flex justify-center mb-4">
+              <div className="w-12 h-12 bg-gradient-primary rounded-full flex items-center justify-center">
+                <Database className="w-6 h-6 text-primary-foreground" />
+              </div>
+            </div>
+            <CardTitle className="text-2xl font-bold">Test Case Generator - Data Migration</CardTitle>
             <CardDescription>
               Sign in to your account to continue generating test cases
             </CardDescription>
