@@ -89,11 +89,11 @@ export function LoginForm({ onLogin, onToggleMode }: LoginFormProps) {
         {/* Login Form */}
         <Card className="w-full max-w-md mx-auto backdrop-blur-sm bg-card/95 border-0 shadow-2xl shadow-primary/20 animate-scale-in hover:shadow-primary/30 transition-all duration-500">
           <CardHeader className="text-center pb-8">
-            <CardTitle className="text-2xl font-bold flex items-center justify-center space-x-3 mb-2">
+            <CardTitle className="text-2xl font-bold flex items-center justify-center space-x-3 mb-2 whitespace-nowrap">
               <div className="w-10 h-10 bg-gradient-primary rounded-xl flex items-center justify-center shadow-lg shadow-primary/30">
                 <DatabaseZap className="w-6 h-6 text-primary-foreground" />
               </div>
-              <span className="bg-gradient-to-r from-foreground to-muted-foreground bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-foreground to-muted-foreground bg-clip-text text-transparent whitespace-nowrap">
                 Test Case Generator - Data Migration
               </span>
             </CardTitle>
