@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { FileText, Database, Target, ArrowRight, Loader2 } from "lucide-react";
 
@@ -34,11 +35,33 @@ export function FileAnalysis({ mappingFile, templateFile, onAnalysisComplete }: 
     // Simulate file analysis
     const analyzeFiles = () => {
       setTimeout(() => {
-        // Mock analysis data
+        // Generate more mock data to demonstrate scrolling
+        const generateMockMappings = () => {
+          const sourceTables = ["customer_raw", "orders_staging", "product_master", "sales_transactions", "inventory_data", "supplier_info", "category_master", "promotion_details"];
+          const targetTables = ["dim_customer", "fact_sales", "dim_product", "fact_inventory", "dim_supplier", "dim_category", "fact_promotions", "bridge_customer_product"];
+          const transformationTypes = ["Direct", "Transformed", "Lookup", "Calculated", "Aggregated"];
+          
+          const mappings = [];
+          for (let i = 0; i < 1200; i++) { // Generate more than 1000 to test the limit
+            const sourceTable = sourceTables[Math.floor(Math.random() * sourceTables.length)];
+            const targetTable = targetTables[Math.floor(Math.random() * targetTables.length)];
+            const transformationType = transformationTypes[Math.floor(Math.random() * transformationTypes.length)];
+            
+            mappings.push({
+              sourceTable,
+              sourceColumn: `${sourceTable}_col_${i + 1}`,
+              targetTable,
+              targetColumn: `${targetTable}_key_${i + 1}`,
+              transformationType
+            });
+          }
+          return mappings;
+        };
+
         const mockData: AnalysisData = {
-          totalMappings: 127,
+          totalMappings: 1200,
           targetTables: 8,
-          sourceTables: 12,
+          sourceTables: 8,
           templateSections: [
             "Test Case Overview",
             "Data Validation Rules",
@@ -46,43 +69,7 @@ export function FileAnalysis({ mappingFile, templateFile, onAnalysisComplete }: 
             "Expected Results Format",
             "Error Handling Scenarios"
           ],
-          mappingPreview: [
-            {
-              sourceTable: "customer_raw",
-              sourceColumn: "cust_id",
-              targetTable: "dim_customer", 
-              targetColumn: "customer_key",
-              transformationType: "Direct"
-            },
-            {
-              sourceTable: "customer_raw",
-              sourceColumn: "first_name",
-              targetTable: "dim_customer",
-              targetColumn: "customer_name",
-              transformationType: "Transformed"
-            },
-            {
-              sourceTable: "orders_staging",
-              sourceColumn: "order_date",
-              targetTable: "fact_sales",
-              targetColumn: "order_date_key",
-              transformationType: "Transformed"
-            },
-            {
-              sourceTable: "product_master",
-              sourceColumn: "product_id",
-              targetTable: "dim_product",
-              targetColumn: "product_key",
-              transformationType: "Direct"
-            },
-            {
-              sourceTable: "sales_transactions",
-              sourceColumn: "amount",
-              targetTable: "fact_sales",
-              targetColumn: "sales_amount",
-              transformationType: "Direct"
-            }
-          ]
+          mappingPreview: generateMockMappings()
         };
 
         setAnalysisData(mockData);
@@ -221,24 +208,24 @@ export function FileAnalysis({ mappingFile, templateFile, onAnalysisComplete }: 
         <CardHeader>
           <CardTitle>Mapping Preview</CardTitle>
           <CardDescription>
-            Sample of source-to-target column mappings (showing first 5 rows)
+            Source-to-target column mappings (showing maximum 1000 records)
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="overflow-x-auto">
+          <ScrollArea className="h-[400px] w-full rounded-md border">
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Source Table</TableHead>
-                  <TableHead>Source Column</TableHead>
-                  <TableHead className="text-center">→</TableHead>
-                  <TableHead>Target Table</TableHead>
-                  <TableHead>Target Column</TableHead>
-                  <TableHead>Transformation</TableHead>
+                  <TableHead className="w-[150px]">Source Table</TableHead>
+                  <TableHead className="w-[200px]">Source Column</TableHead>
+                  <TableHead className="w-[50px] text-center">→</TableHead>
+                  <TableHead className="w-[150px]">Target Table</TableHead>
+                  <TableHead className="w-[200px]">Target Column</TableHead>
+                  <TableHead className="w-[120px]">Transformation</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {analysisData.mappingPreview.map((mapping, index) => (
+                {analysisData.mappingPreview.slice(0, 1000).map((mapping, index) => (
                   <TableRow key={index}>
                     <TableCell className="font-medium">{mapping.sourceTable}</TableCell>
                     <TableCell>{mapping.sourceColumn}</TableCell>
@@ -258,7 +245,12 @@ export function FileAnalysis({ mappingFile, templateFile, onAnalysisComplete }: 
                 ))}
               </TableBody>
             </Table>
-          </div>
+          </ScrollArea>
+          {analysisData.mappingPreview.length > 1000 && (
+            <p className="text-sm text-muted-foreground mt-2">
+              Showing 1000 of {analysisData.mappingPreview.length} total mappings
+            </p>
+          )}
         </CardContent>
       </Card>
 
