@@ -41,56 +41,61 @@ export function LoginForm({ onLogin, onToggleMode }: LoginFormProps) {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50 flex items-center justify-center p-4">
-      <div className="w-full max-w-4xl grid lg:grid-cols-2 gap-12 items-center">
+    <div className="min-h-screen bg-gradient-to-br from-background via-secondary/20 to-primary/10 flex items-center justify-center p-4 relative overflow-hidden">
+      {/* Animated background elements */}
+      <div className="absolute inset-0 opacity-30">
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-gradient-to-r from-primary/20 to-accent/20 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-gradient-to-r from-secondary/20 to-primary/20 rounded-full blur-3xl animate-pulse delay-1000"></div>
+      </div>
+      <div className="w-full max-w-4xl grid lg:grid-cols-2 gap-12 items-center relative z-10">
         {/* Left side - Branding */}
-        <div className="hidden lg:flex flex-col justify-center space-y-8">
+        <div className="hidden lg:flex flex-col justify-center space-y-8 animate-fade-in">
           <div className="space-y-6">
             <div className="flex items-center space-x-4">
-              <div className="w-16 h-16 bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl flex items-center justify-center shadow-xl">
-                <DatabaseZap className="w-8 h-8 text-white" />
+              <div className="w-16 h-16 bg-gradient-to-r from-primary to-accent rounded-2xl flex items-center justify-center shadow-elegant hover-scale">
+                <DatabaseZap className="w-8 h-8 text-primary-foreground" />
               </div>
               <div>
-                <h1 className="text-3xl font-bold text-gray-900">Test Case Generator</h1>
-                <p className="text-lg text-blue-600 font-medium">Data Migration</p>
+                <h1 className="text-3xl font-bold text-foreground">Test Case Generator</h1>
+                <p className="text-lg text-primary font-medium">Data Migration</p>
               </div>
             </div>
             
             <div className="space-y-6">
-              <h2 className="text-4xl font-bold text-gray-900 leading-tight">
+              <h2 className="text-4xl font-bold text-foreground leading-tight bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
                 Streamline Your ETL Testing Process
               </h2>
-              <p className="text-xl text-gray-600 leading-relaxed">
+              <p className="text-xl text-muted-foreground leading-relaxed">
                 Generate comprehensive test cases and SQL queries for your data migration projects with intelligent automation.
               </p>
             </div>
 
             <div className="grid grid-cols-1 gap-4">
-              <div className="flex items-center space-x-4 p-4 bg-white/80 rounded-xl shadow-sm">
-                <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
-                  <Shield className="w-5 h-5 text-green-600" />
+              <div className="flex items-center space-x-4 p-4 bg-card/80 backdrop-blur-sm rounded-xl shadow-elegant hover-scale transition-all duration-300">
+                <div className="w-10 h-10 bg-gradient-to-r from-success/20 to-success/10 rounded-lg flex items-center justify-center">
+                  <Shield className="w-5 h-5 text-success" />
                 </div>
                 <div>
-                  <h3 className="font-semibold text-gray-900">Secure Processing</h3>
-                  <p className="text-gray-600">Enterprise-grade security for your data</p>
+                  <h3 className="font-semibold text-card-foreground">Secure Processing</h3>
+                  <p className="text-muted-foreground">Enterprise-grade security for your data</p>
                 </div>
               </div>
-              <div className="flex items-center space-x-4 p-4 bg-white/80 rounded-xl shadow-sm">
-                <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
-                  <Zap className="w-5 h-5 text-blue-600" />
+              <div className="flex items-center space-x-4 p-4 bg-card/80 backdrop-blur-sm rounded-xl shadow-elegant hover-scale transition-all duration-300">
+                <div className="w-10 h-10 bg-gradient-to-r from-primary/20 to-primary/10 rounded-lg flex items-center justify-center">
+                  <Zap className="w-5 h-5 text-primary" />
                 </div>
                 <div>
-                  <h3 className="font-semibold text-gray-900">Automated Generation</h3>
-                  <p className="text-gray-600">AI-powered test case creation</p>
+                  <h3 className="font-semibold text-card-foreground">Automated Generation</h3>
+                  <p className="text-muted-foreground">AI-powered test case creation</p>
                 </div>
               </div>
-              <div className="flex items-center space-x-4 p-4 bg-white/80 rounded-xl shadow-sm">
-                <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
-                  <Database className="w-5 h-5 text-purple-600" />
+              <div className="flex items-center space-x-4 p-4 bg-card/80 backdrop-blur-sm rounded-xl shadow-elegant hover-scale transition-all duration-300">
+                <div className="w-10 h-10 bg-gradient-to-r from-accent/20 to-accent/10 rounded-lg flex items-center justify-center">
+                  <Database className="w-5 h-5 text-accent" />
                 </div>
                 <div>
-                  <h3 className="font-semibold text-gray-900">Multiple Formats</h3>
-                  <p className="text-gray-600">Export to Excel, Word, CSV & more</p>
+                  <h3 className="font-semibold text-card-foreground">Multiple Formats</h3>
+                  <p className="text-muted-foreground">Export to Excel, Word, CSV & more</p>
                 </div>
               </div>
             </div>
@@ -98,24 +103,24 @@ export function LoginForm({ onLogin, onToggleMode }: LoginFormProps) {
         </div>
 
         {/* Right side - Login Form */}
-        <div className="w-full max-w-md mx-auto">
-          <Card className="border-0 shadow-2xl bg-white/95 backdrop-blur-sm">
+        <div className="w-full max-w-md mx-auto animate-scale-in">
+          <Card className="border-0 shadow-elegant bg-card/95 backdrop-blur-sm hover:shadow-2xl transition-all duration-300">
             <CardHeader className="text-center pb-6 pt-8">
               {/* Logo and Title inside card */}
               <div className="flex items-center justify-center space-x-4 mb-6">
-                <div className="w-12 h-12 bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
-                  <DatabaseZap className="w-6 h-6 text-white" />
+                <div className="w-12 h-12 bg-gradient-to-r from-primary to-accent rounded-xl flex items-center justify-center shadow-elegant hover-scale">
+                  <DatabaseZap className="w-6 h-6 text-primary-foreground" />
                 </div>
                 <div className="text-left">
-                  <h1 className="text-xl font-bold text-gray-900">Test Case Generator</h1>
-                  <p className="text-blue-600 font-medium text-sm">Data Migration</p>
+                  <h1 className="text-xl font-bold text-card-foreground">Test Case Generator</h1>
+                  <p className="text-primary font-medium text-sm">Data Migration</p>
                 </div>
               </div>
             </CardHeader>
             <CardContent className="px-8 pb-8">
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="space-y-2">
-                  <Label htmlFor="email" className="text-sm font-medium text-gray-700">
+                  <Label htmlFor="email" className="text-sm font-medium text-foreground">
                     Email Address
                   </Label>
                   <Input
@@ -125,11 +130,11 @@ export function LoginForm({ onLogin, onToggleMode }: LoginFormProps) {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required
-                    className="h-12 px-4 border-2 border-gray-200 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/20 rounded-lg transition-all duration-200"
+                    className="h-12 px-4 border-2 border-input focus:border-primary focus:ring-4 focus:ring-primary/20 rounded-lg transition-all duration-200"
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="password" className="text-sm font-medium text-gray-700">
+                  <Label htmlFor="password" className="text-sm font-medium text-foreground">
                     Password
                   </Label>
                   <Input
@@ -139,13 +144,13 @@ export function LoginForm({ onLogin, onToggleMode }: LoginFormProps) {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required
-                    className="h-12 px-4 border-2 border-gray-200 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/20 rounded-lg transition-all duration-200"
+                    className="h-12 px-4 border-2 border-input focus:border-primary focus:ring-4 focus:ring-primary/20 rounded-lg transition-all duration-200"
                   />
                 </div>
                 
                 <Button 
                   type="submit" 
-                  className="w-full h-12 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-0.5" 
+                  className="w-full h-12 bg-gradient-to-r from-primary to-accent hover:from-primary/90 hover:to-accent/90 text-primary-foreground font-semibold rounded-lg shadow-elegant hover:shadow-2xl transition-all duration-300 hover:-translate-y-0.5 hover-scale" 
                   disabled={isLoading}
                 >
                   {isLoading ? (
@@ -160,11 +165,11 @@ export function LoginForm({ onLogin, onToggleMode }: LoginFormProps) {
               </form>
               
               <div className="mt-8 text-center">
-                <p className="text-gray-600">
+                <p className="text-muted-foreground">
                   Don't have an account?{" "}
                   <button
                     onClick={onToggleMode}
-                    className="text-blue-600 hover:text-blue-700 font-semibold hover:underline transition-colors duration-200"
+                    className="text-primary hover:text-accent font-semibold hover:underline transition-colors duration-200"
                   >
                     Create Account
                   </button>
