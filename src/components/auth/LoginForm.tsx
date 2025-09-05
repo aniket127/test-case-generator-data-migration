@@ -112,9 +112,6 @@ export function LoginForm({ onLogin, onToggleMode }: LoginFormProps) {
           
           <Card className="border-0 shadow-2xl bg-white/95 backdrop-blur-sm">
             <CardHeader className="text-center pb-6 pt-8">
-              <CardTitle className="text-2xl font-bold text-gray-900 mb-2">
-                Welcome Back
-              </CardTitle>
               <CardDescription className="text-gray-600">
                 Sign in to access your test case generator dashboard
               </CardDescription>
