@@ -1,18 +1,20 @@
 import { useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Upload, FileText, CheckCircle, AlertCircle } from "lucide-react";
+import { Upload, FileText, CheckCircle, AlertCircle, X, RotateCcw } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 interface FileUploaderProps {
   onFilesUploaded: (files: { mapping?: File; template?: File }) => void;
   onAnalyze: () => void;
+  onClearFiles: () => void;
   canAnalyze: boolean;
+  uploadedFiles: { mapping?: File; template?: File };
 }
 
-export function FileUploader({ onFilesUploaded, onAnalyze, canAnalyze }: FileUploaderProps) {
-  const [mappingFile, setMappingFile] = useState<File | null>(null);
-  const [templateFile, setTemplateFile] = useState<File | null>(null);
+export function FileUploader({ onFilesUploaded, onAnalyze, onClearFiles, canAnalyze, uploadedFiles }: FileUploaderProps) {
+  const [mappingFile, setMappingFile] = useState<File | null>(uploadedFiles.mapping || null);
+  const [templateFile, setTemplateFile] = useState<File | null>(uploadedFiles.template || null);
   const mappingInputRef = useRef<HTMLInputElement>(null);
   const templateInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
@@ -47,7 +49,28 @@ export function FileUploader({ onFilesUploaded, onAnalyze, canAnalyze }: FileUpl
     });
   };
 
-  const FileUploadCard = ({ 
+  const handleClearFile = (type: 'mapping' | 'template') => {
+    if (type === 'mapping') {
+      setMappingFile(null);
+      onFilesUploaded({ mapping: undefined, template: templateFile || undefined });
+      if (mappingInputRef.current) {
+        mappingInputRef.current.value = '';
+      }
+    } else {
+      setTemplateFile(null);
+      onFilesUploaded({ mapping: mappingFile || undefined, template: undefined });
+      if (templateInputRef.current) {
+        templateInputRef.current.value = '';
+      }
+    }
+
+    toast({
+      title: "File Removed",
+      description: `${type === 'mapping' ? 'Mapping' : 'Template'} file has been removed.`,
+    });
+  };
+
+  const FileUploadCard = ({
     title, 
     description, 
     file, 
@@ -69,9 +92,24 @@ export function FileUploader({ onFilesUploaded, onAnalyze, canAnalyze }: FileUpl
             <FileText className="w-5 h-5 text-primary" />
             <CardTitle className="text-lg">{title}</CardTitle>
           </div>
-          {file && (
-            <CheckCircle className="w-5 h-5 text-success" />
-          )}
+          <div className="flex items-center space-x-2">
+            {file && (
+              <>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleClearFile(type);
+                  }}
+                  className="h-8 w-8 p-0 hover:bg-destructive/10 hover:text-destructive"
+                >
+                  <X className="w-4 h-4" />
+                </Button>
+                <CheckCircle className="w-5 h-5 text-success" />
+              </>
+            )}
+          </div>
         </div>
         <CardDescription>{description}</CardDescription>
       </CardHeader>
@@ -189,14 +227,26 @@ export function FileUploader({ onFilesUploaded, onAnalyze, canAnalyze }: FileUpl
                 </div>
               </div>
 
-              <Button 
-                onClick={onAnalyze} 
-                disabled={!canAnalyze}
-                className="w-full"
-                size="lg"
-              >
-                Analyze Files
-              </Button>
+              <div className="flex gap-3">
+                <Button 
+                  onClick={onAnalyze} 
+                  disabled={!canAnalyze}
+                  className="flex-1"
+                  size="lg"
+                >
+                  Analyze Files
+                </Button>
+                <Button 
+                  onClick={onClearFiles}
+                  disabled={!mappingFile && !templateFile}
+                  variant="outline"
+                  size="lg"
+                  className="flex items-center gap-2 hover:bg-destructive/10 hover:text-destructive hover:border-destructive/20"
+                >
+                  <RotateCcw className="w-4 h-4" />
+                  Clear All
+                </Button>
+              </div>
             </div>
           </CardContent>
         </Card>

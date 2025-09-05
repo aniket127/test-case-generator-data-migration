@@ -61,6 +61,27 @@ export function Dashboard({ userEmail, onLogout }: DashboardProps) {
     }
   };
 
+  const handleClearFiles = () => {
+    setUploadedFiles({});
+    setAnalysisData(null);
+    setTestConfig(null);
+    setCurrentStep("upload");
+    toast({
+      title: "Files Cleared",
+      description: "All files have been cleared. You can upload new files now.",
+    });
+  };
+
+  const handleStepClick = (stepId: WorkflowStep) => {
+    const stepIndex = steps.findIndex(s => s.id === stepId);
+    const currentStepIndex = steps.findIndex(s => s.id === currentStep);
+    
+    // Only allow navigation to completed steps or the current step
+    if (stepIndex <= currentStepIndex || steps[stepIndex - 1]?.completed) {
+      setCurrentStep(stepId);
+    }
+  };
+
   const handleAnalysisComplete = (data: AnalysisData) => {
     setAnalysisData(data);
     setCurrentStep("configure");
@@ -123,36 +144,51 @@ export function Dashboard({ userEmail, onLogout }: DashboardProps) {
           </CardHeader>
           <CardContent>
             <div className="flex items-center justify-between">
-              {steps.map((step, index) => (
-                <div key={step.id} className="flex items-center">
-                  <div className="flex flex-col items-center">
-                    <div className={`w-10 h-10 rounded-full flex items-center justify-center border-2 ${
-                      step.completed 
-                        ? "bg-primary border-primary text-primary-foreground" 
-                        : currentStep === step.id
-                        ? "border-primary text-primary"
-                        : "border-muted text-muted-foreground"
-                    }`}>
-                      {step.completed ? (
-                        <CheckCircle className="w-5 h-5" />
-                      ) : (
-                        <span>{index + 1}</span>
+              {steps.map((step, index) => {
+                const canNavigate = step.completed || currentStep === step.id || 
+                  (index > 0 && steps[index - 1]?.completed);
+                
+                return (
+                  <div key={step.id} className="flex items-center">
+                    <div className="flex flex-col items-center">
+                      <button
+                        onClick={() => handleStepClick(step.id as WorkflowStep)}
+                        disabled={!canNavigate}
+                        className={`w-10 h-10 rounded-full flex items-center justify-center border-2 transition-all duration-200 ${
+                          step.completed 
+                            ? "bg-primary border-primary text-primary-foreground hover:bg-primary/90 cursor-pointer" 
+                            : currentStep === step.id
+                            ? "border-primary text-primary bg-primary/10"
+                            : canNavigate
+                            ? "border-muted-foreground/50 text-muted-foreground hover:border-primary hover:text-primary cursor-pointer"
+                            : "border-muted text-muted-foreground cursor-not-allowed opacity-50"
+                        }`}
+                      >
+                        {step.completed ? (
+                          <CheckCircle className="w-5 h-5" />
+                        ) : (
+                          <span>{index + 1}</span>
+                        )}
+                      </button>
+                      <span className={`text-sm font-medium mt-2 ${
+                        step.completed ? "text-foreground" : "text-muted-foreground"
+                      }`}>
+                        {step.title}
+                      </span>
+                      {step.completed && (
+                        <Badge variant="secondary" className="mt-1 bg-success/10 text-success border-success/20">
+                          Complete
+                        </Badge>
                       )}
                     </div>
-                    <span className="text-sm font-medium mt-2">{step.title}</span>
-                    {step.completed && (
-                      <Badge variant="secondary" className="mt-1">
-                        Complete
-                      </Badge>
+                    {index < steps.length - 1 && (
+                      <div className={`flex-1 h-0.5 mx-4 transition-colors ${
+                        step.completed ? "bg-primary" : "bg-muted"
+                      }`} />
                     )}
                   </div>
-                  {index < steps.length - 1 && (
-                    <div className={`flex-1 h-0.5 mx-4 ${
-                      step.completed ? "bg-primary" : "bg-muted"
-                    }`} />
-                  )}
-                </div>
-              ))}
+                );
+              })}
             </div>
           </CardContent>
         </Card>
@@ -163,7 +199,9 @@ export function Dashboard({ userEmail, onLogout }: DashboardProps) {
             <FileUploader 
               onFilesUploaded={handleFilesUploaded}
               onAnalyze={() => setCurrentStep("analysis")}
+              onClearFiles={handleClearFiles}
               canAnalyze={!!uploadedFiles.mapping && !!uploadedFiles.template}
+              uploadedFiles={uploadedFiles}
             />
           )}
           
