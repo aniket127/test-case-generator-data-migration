@@ -111,9 +111,6 @@ export function LoginForm({ onLogin, onToggleMode }: LoginFormProps) {
                   <p className="text-blue-600 font-medium text-sm">Data Migration</p>
                 </div>
               </div>
-              <CardDescription className="text-gray-600">
-                Sign in to access your test case generator dashboard
-              </CardDescription>
             </CardHeader>
             <CardContent className="px-8 pb-8">
               <form onSubmit={handleSubmit} className="space-y-6">
