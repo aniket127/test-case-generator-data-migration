@@ -213,38 +213,40 @@ export function FileAnalysis({ mappingFile, templateFile, onAnalysisComplete }: 
         </CardHeader>
         <CardContent>
           <ScrollArea className="h-[400px] w-full rounded-md border">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead className="w-[150px]">Source Table</TableHead>
-                  <TableHead className="w-[200px]">Source Column</TableHead>
-                  <TableHead className="w-[50px] text-center">→</TableHead>
-                  <TableHead className="w-[150px]">Target Table</TableHead>
-                  <TableHead className="w-[200px]">Target Column</TableHead>
-                  <TableHead className="w-[120px]">Transformation</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {analysisData.mappingPreview.slice(0, 1000).map((mapping, index) => (
-                  <TableRow key={index}>
-                    <TableCell className="font-medium">{mapping.sourceTable}</TableCell>
-                    <TableCell>{mapping.sourceColumn}</TableCell>
-                    <TableCell className="text-center">
-                      <ArrowRight className="w-4 h-4 text-muted-foreground mx-auto" />
-                    </TableCell>
-                    <TableCell className="font-medium">{mapping.targetTable}</TableCell>
-                    <TableCell>{mapping.targetColumn}</TableCell>
-                    <TableCell>
-                      <Badge 
-                        variant={mapping.transformationType === "Direct" ? "secondary" : "outline"}
-                      >
-                        {mapping.transformationType}
-                      </Badge>
-                    </TableCell>
+            <div className="min-w-[870px]">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead className="w-[150px]">Source Table</TableHead>
+                    <TableHead className="w-[200px]">Source Column</TableHead>
+                    <TableHead className="w-[50px] text-center">→</TableHead>
+                    <TableHead className="w-[150px]">Target Table</TableHead>
+                    <TableHead className="w-[200px]">Target Column</TableHead>
+                    <TableHead className="w-[120px]">Transformation</TableHead>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+                </TableHeader>
+                <TableBody>
+                  {analysisData.mappingPreview.slice(0, 1000).map((mapping, index) => (
+                    <TableRow key={index}>
+                      <TableCell className="font-medium">{mapping.sourceTable}</TableCell>
+                      <TableCell>{mapping.sourceColumn}</TableCell>
+                      <TableCell className="text-center">
+                        <ArrowRight className="w-4 h-4 text-muted-foreground mx-auto" />
+                      </TableCell>
+                      <TableCell className="font-medium">{mapping.targetTable}</TableCell>
+                      <TableCell>{mapping.targetColumn}</TableCell>
+                      <TableCell>
+                        <Badge 
+                          variant={mapping.transformationType === "Direct" ? "secondary" : "outline"}
+                        >
+                          {mapping.transformationType}
+                        </Badge>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
           </ScrollArea>
           {analysisData.mappingPreview.length > 1000 && (
             <p className="text-sm text-muted-foreground mt-2">
