@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
-import { Database, Shield, Zap } from "lucide-react";
+import { Database, Shield, Zap, Code } from "lucide-react";
 
 interface LoginFormProps {
   onLogin: (email: string) => void;
@@ -82,12 +82,12 @@ export function LoginForm({ onLogin, onToggleMode }: LoginFormProps) {
         {/* Login Form */}
         <Card className="w-full max-w-md mx-auto shadow-elegant animate-scale-in">
           <CardHeader className="text-center">
-            <div className="flex justify-center mb-4">
-              <div className="w-12 h-12 bg-gradient-primary rounded-full flex items-center justify-center">
-                <Database className="w-6 h-6 text-primary-foreground" />
+            <CardTitle className="text-2xl font-bold flex items-center justify-center space-x-3">
+              <div className="w-8 h-8 bg-gradient-primary rounded-lg flex items-center justify-center">
+                <Code className="w-5 h-5 text-primary-foreground" />
               </div>
-            </div>
-            <CardTitle className="text-2xl font-bold">Test Case Generator - Data Migration</CardTitle>
+              <span>Test Case Generator - Data Migration</span>
+            </CardTitle>
             <CardDescription>
               Sign in to your account to continue generating test cases
             </CardDescription>
