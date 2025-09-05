@@ -99,19 +99,18 @@ export function LoginForm({ onLogin, onToggleMode }: LoginFormProps) {
 
         {/* Right side - Login Form */}
         <div className="w-full max-w-md mx-auto">
-          {/* Mobile Logo */}
-          <div className="lg:hidden flex items-center justify-center space-x-4 mb-8">
-            <div className="w-12 h-12 bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
-              <DatabaseZap className="w-6 h-6 text-white" />
-            </div>
-            <div>
-              <h1 className="text-2xl font-bold text-gray-900">Test Case Generator</h1>
-              <p className="text-blue-600 font-medium">Data Migration</p>
-            </div>
-          </div>
-          
           <Card className="border-0 shadow-2xl bg-white/95 backdrop-blur-sm">
             <CardHeader className="text-center pb-6 pt-8">
+              {/* Logo and Title inside card */}
+              <div className="flex items-center justify-center space-x-4 mb-6">
+                <div className="w-12 h-12 bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
+                  <DatabaseZap className="w-6 h-6 text-white" />
+                </div>
+                <div className="text-left">
+                  <h1 className="text-xl font-bold text-gray-900">Test Case Generator</h1>
+                  <p className="text-blue-600 font-medium text-sm">Data Migration</p>
+                </div>
+              </div>
               <CardDescription className="text-gray-600">
                 Sign in to access your test case generator dashboard
               </CardDescription>
