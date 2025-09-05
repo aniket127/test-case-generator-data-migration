@@ -43,7 +43,8 @@ interface TestConfig {
 }
 
 export function Dashboard({ userEmail, onLogout }: DashboardProps) {
-  const [currentStep, setCurrentStep] = useState<WorkflowStep>("upload");
+  const [currentStep, setCurrentStep] = useState<WorkflowStep>("upload"); // Actual progression
+  const [viewedStep, setViewedStep] = useState<WorkflowStep>("upload"); // Currently viewed step
   const [uploadedFiles, setUploadedFiles] = useState<UploadedFiles>({});
   const [analysisData, setAnalysisData] = useState<AnalysisData | null>(null);
   const [testConfig, setTestConfig] = useState<TestConfig | null>(null);
@@ -76,7 +77,10 @@ export function Dashboard({ userEmail, onLogout }: DashboardProps) {
     const stepIndex = steps.findIndex(s => s.id === stepId);
     const currentStepIndex = steps.findIndex(s => s.id === currentStep);
     
-    // Only allow navigation to completed steps or the current step
+    // Always allow viewing any step
+    setViewedStep(stepId);
+    
+    // Only allow actual progression to completed steps or the next available step
     if (stepIndex <= currentStepIndex || steps[stepIndex - 1]?.completed) {
       setCurrentStep(stepId);
     }
@@ -85,6 +89,7 @@ export function Dashboard({ userEmail, onLogout }: DashboardProps) {
   const handleAnalysisComplete = (data: AnalysisData) => {
     setAnalysisData(data);
     setCurrentStep("configure");
+    setViewedStep("configure");
     toast({
       title: "Analysis Complete",
       description: "File analysis completed. Configure your test case generation settings.",
@@ -98,6 +103,7 @@ export function Dashboard({ userEmail, onLogout }: DashboardProps) {
     // Simulate test case generation
     setTimeout(() => {
       setCurrentStep("results");
+      setViewedStep("results");
       setIsGenerating(false);
       toast({
         title: "Test Cases Generated",
@@ -145,23 +151,24 @@ export function Dashboard({ userEmail, onLogout }: DashboardProps) {
           <CardContent>
             <div className="flex items-center justify-between">
               {steps.map((step, index) => {
-                const canNavigate = step.completed || currentStep === step.id || 
+                const canProgress = step.completed || currentStep === step.id || 
                   (index > 0 && steps[index - 1]?.completed);
+                const isViewed = viewedStep === step.id;
+                const isActive = currentStep === step.id;
                 
                 return (
                   <div key={step.id} className="flex items-center">
                     <div className="flex flex-col items-center">
                       <button
                         onClick={() => handleStepClick(step.id as WorkflowStep)}
-                        disabled={!canNavigate}
-                        className={`w-10 h-10 rounded-full flex items-center justify-center border-2 transition-all duration-200 ${
+                        className={`w-10 h-10 rounded-full flex items-center justify-center border-2 transition-all duration-200 cursor-pointer ${
                           step.completed 
-                            ? "bg-primary border-primary text-primary-foreground hover:bg-primary/90 cursor-pointer" 
-                            : currentStep === step.id
+                            ? "bg-primary border-primary text-primary-foreground hover:bg-primary/90" 
+                            : isActive
                             ? "border-primary text-primary bg-primary/10"
-                            : canNavigate
-                            ? "border-muted-foreground/50 text-muted-foreground hover:border-primary hover:text-primary cursor-pointer"
-                            : "border-muted text-muted-foreground cursor-not-allowed opacity-50"
+                            : isViewed
+                            ? "border-primary/60 text-primary/70 bg-primary/5"
+                            : "border-muted-foreground/50 text-muted-foreground hover:border-primary hover:text-primary"
                         }`}
                       >
                         {step.completed ? (
@@ -171,15 +178,23 @@ export function Dashboard({ userEmail, onLogout }: DashboardProps) {
                         )}
                       </button>
                       <span className={`text-sm font-medium mt-2 ${
-                        step.completed ? "text-foreground" : "text-muted-foreground"
+                        step.completed || isActive ? "text-foreground" : 
+                        isViewed ? "text-foreground/70" : "text-muted-foreground"
                       }`}>
                         {step.title}
                       </span>
-                      {step.completed && (
-                        <Badge variant="secondary" className="mt-1 bg-success/10 text-success border-success/20">
-                          Complete
-                        </Badge>
-                      )}
+                      <div className="flex flex-col items-center gap-1">
+                        {step.completed && (
+                          <Badge variant="secondary" className="bg-success/10 text-success border-success/20">
+                            Complete
+                          </Badge>
+                        )}
+                        {isViewed && !canProgress && !step.completed && (
+                          <Badge variant="outline" className="text-xs bg-muted/50 text-muted-foreground">
+                            Preview
+                          </Badge>
+                        )}
+                      </div>
                     </div>
                     {index < steps.length - 1 && (
                       <div className={`flex-1 h-0.5 mx-4 transition-colors ${
@@ -195,37 +210,70 @@ export function Dashboard({ userEmail, onLogout }: DashboardProps) {
 
         {/* Main Content */}
         <div className="animate-fade-in">
-          {currentStep === "upload" && (
+          {viewedStep === "upload" && (
             <FileUploader 
               onFilesUploaded={handleFilesUploaded}
-              onAnalyze={() => setCurrentStep("analysis")}
+              onAnalyze={() => {
+                setCurrentStep("analysis");
+                setViewedStep("analysis");
+              }}
               onClearFiles={handleClearFiles}
               canAnalyze={!!uploadedFiles.mapping && !!uploadedFiles.template}
               uploadedFiles={uploadedFiles}
             />
           )}
           
-          {currentStep === "analysis" && uploadedFiles.mapping && uploadedFiles.template && (
-            <FileAnalysis 
-              mappingFile={uploadedFiles.mapping}
-              templateFile={uploadedFiles.template}
-              onAnalysisComplete={handleAnalysisComplete}
-            />
+          {viewedStep === "analysis" && (
+            <div className={currentStep !== "analysis" && !steps.find(s => s.id === "analysis")?.completed ? "opacity-60 pointer-events-none" : ""}>
+              {(!uploadedFiles.mapping || !uploadedFiles.template) && currentStep !== "analysis" ? (
+                <Card className="p-8 text-center">
+                  <CardContent>
+                    <p className="text-muted-foreground">Upload files in Step 1 to view analysis</p>
+                  </CardContent>
+                </Card>
+              ) : (
+                <FileAnalysis 
+                  mappingFile={uploadedFiles.mapping!}
+                  templateFile={uploadedFiles.template!}
+                  onAnalysisComplete={handleAnalysisComplete}
+                />
+              )}
+            </div>
           )}
           
-          {currentStep === "configure" && analysisData && (
-            <TestCaseConfig 
-              analysisData={analysisData}
-              onSubmit={handleConfigSubmit}
-              isGenerating={isGenerating}
-            />
+          {viewedStep === "configure" && (
+            <div className={currentStep !== "configure" && !steps.find(s => s.id === "configure")?.completed ? "opacity-60 pointer-events-none" : ""}>
+              {!analysisData && currentStep !== "configure" ? (
+                <Card className="p-8 text-center">
+                  <CardContent>
+                    <p className="text-muted-foreground">Complete analysis in Step 2 to configure test cases</p>
+                  </CardContent>
+                </Card>
+              ) : (
+                <TestCaseConfig 
+                  analysisData={analysisData!}
+                  onSubmit={handleConfigSubmit}
+                  isGenerating={isGenerating}
+                />
+              )}
+            </div>
           )}
           
-          {currentStep === "results" && testConfig && analysisData && (
-            <TestResults 
-              config={testConfig}
-              analysisData={analysisData}
-            />
+          {viewedStep === "results" && (
+            <div className={currentStep !== "results" && !steps.find(s => s.id === "results")?.completed ? "opacity-60 pointer-events-none" : ""}>
+              {(!testConfig || !analysisData) && currentStep !== "results" ? (
+                <Card className="p-8 text-center">
+                  <CardContent>
+                    <p className="text-muted-foreground">Complete configuration in Step 3 to view results</p>
+                  </CardContent>
+                </Card>
+              ) : (
+                <TestResults 
+                  config={testConfig!}
+                  analysisData={analysisData!}
+                />
+              )}
+            </div>
           )}
         </div>
       </div>
