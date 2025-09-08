@@ -96,15 +96,6 @@ export function LoginForm({ onLogin, onToggleMode }: LoginFormProps) {
 
             <div className="grid grid-cols-1 gap-4">
               <div className="flex items-center space-x-4 p-4 bg-card/80 backdrop-blur-sm rounded-xl shadow-elegant hover-scale transition-all duration-300">
-                <div className="w-10 h-10 bg-gradient-to-r from-success/20 to-success/10 rounded-lg flex items-center justify-center">
-                  <Shield className="w-5 h-5 text-success" />
-                </div>
-                <div>
-                  <h3 className="font-semibold text-card-foreground">Secure Processing</h3>
-                  <p className="text-muted-foreground">Enterprise-grade security for your data</p>
-                </div>
-              </div>
-              <div className="flex items-center space-x-4 p-4 bg-card/80 backdrop-blur-sm rounded-xl shadow-elegant hover-scale transition-all duration-300">
                 <div className="w-10 h-10 bg-gradient-to-r from-primary/20 to-primary/10 rounded-lg flex items-center justify-center">
                   <Zap className="w-5 h-5 text-primary" />
                 </div>
