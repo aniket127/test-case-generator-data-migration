@@ -30,7 +30,7 @@ export function LoginForm({ onLogin, onToggleMode }: LoginFormProps) {
       if (email && password) {
         toast({
           title: "Login Successful",
-          description: "Welcome to Data Test Case Generator",
+          description: "Welcome to Test Case Generator",
         });
         onLogin(email);
       } else {
