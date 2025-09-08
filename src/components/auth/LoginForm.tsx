@@ -101,7 +101,7 @@ export function LoginForm({ onLogin, onToggleMode }: LoginFormProps) {
                 </div>
                 <div>
                   <h3 className="font-semibold text-card-foreground">Automated Generation</h3>
-                  <p className="text-muted-foreground">AI-powered test case creation</p>
+                  <p className="text-muted-foreground">Amplify testing efficiency with intelligent test case creation</p>
                 </div>
               </div>
               <div className="flex items-center space-x-4 p-4 bg-card/80 backdrop-blur-sm rounded-xl shadow-elegant hover-scale transition-all duration-300">
